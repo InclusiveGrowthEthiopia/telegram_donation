@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Donation {
+  id                String   @id @default(cuid())
+  merchantOrderId   String   @unique
+  statusToken       String   @unique
+  telegramUserId    String?
+  telegramUsername  String?
+  donorName         String?
+  message           String?
+  anonymous         Boolean  @default(false)
+  amount            Decimal  @db.Decimal(20, 2)
+  currency          String   @default("ETB")
+  status            String   @default("PENDING")
+  paymentOrderId    String?
+  transactionId     String?
+  prepayId          String?
+  notifyStatus      String?
+  lastError         String?
+  rawNotification   Json?
+  rawQueryResponse  Json?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  paidAt            DateTime?
+
+  @@index([telegramUserId])
+  @@index([status])
+  @@index([createdAt])
+}
